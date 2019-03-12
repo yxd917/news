@@ -1,0 +1,81 @@
+{include file="common/header" /}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">{:lang('systemInfo')}</div>
+                <div class="layui-card-body">
+                    <table class="layui-table" lay-even lay-skin="line">
+                        <colgroup>
+                            <col width="40%">
+                            <col>
+                        </colgroup>                        
+                        <tbody>
+                        <tr>
+                            <td>网站域名</td>
+                            <td>{$config.url}</td>
+                        </tr>
+                        <tr>
+                            <td>网站目录</td>
+                            <td>{$config.document_root}</td>
+                        </tr>
+                        <tr>
+                            <td>服务器操作系统</td>
+                            <td>{$config.server_os}</td>
+                        </tr>
+                        <tr>
+                            <td>服务器端口</td>
+                            <td>{$config.server_port}</td>
+                        </tr>
+                        <tr>
+                            <td>服务器IP</td>
+                            <td>{$config.server_ip}</td>
+                        </tr>
+                        <tr>
+                            <td>WEB运行环境</td>
+                            <td>{$config.server_soft}</td>
+                        </tr>
+                        <tr>
+                            <td>MySQL数据库版本</td>
+                            <td>{$config.mysql_version}</td>
+                        </tr>
+                        <tr>
+                            <td>运行PHP版本</td>
+                            <td>{$config.php_version}</td>
+                        </tr>
+
+                        <tr>
+                            <td>最大上传限制</td>
+                            <td>{$config.max_upload_size}</td>
+                        </tr>                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- <div class="layui-card">
+                <div class="layui-tab layui-tab-brief layadmin-latestData">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">今日热搜</li>
+                        <li>今日热帖</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <table id="LAY-index-topSearch"></table>
+                        </div>
+                        <div class="layui-tab-item">
+                            <table id="LAY-index-topCard"></table>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+{include file="common/footer" /}
+<script>
+  layui.config({
+    base: '/static/admin/' //静态资源所在路径
+  }).extend({
+    index: 'lib/index' //主入口模块
+  }).use(['index', 'console']);
+</script>

@@ -1,0 +1,26 @@
+{include file="common/header"/}
+<div class="layui-fluid">
+    <div class="layui-card">        
+        <div class="layui-card-body">            
+            <table class="layui-table" id="list" lay-filter="list"></table>            
+        </div>
+    </div>
+</div>
+{include file="common/footer"/}
+
+<script>
+    layui.use(['table','form'], function() {
+        var table = layui.table,form = layui.form,$ = layui.jquery;
+        var tableIn = table.render({
+            elem: '#list',
+            url: '{:url("getlogs")}',
+			title:'角色表格',
+            cols: [[
+                { field:'id', title: '编号', width:60 },
+                { field:'nickname', title: '用户', width:100, sort: true },
+                { field:'ip', title: 'IP',width:150 },
+                { field:'create_time', title: '登陆时间',width:200 },
+            ]]
+        });
+    });
+</script>

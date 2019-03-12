@@ -1,0 +1,165 @@
+{include file="common/header" /}
+<div class="layui-fluid">
+    <form class="layui-form" action="">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header">添加内容</div>
+                    <div class="layui-card-body">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标题：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择分类：</label>
+                            <div class="layui-input-block">
+                                <select name="catid" lay-verify="required" id="cats">
+                                    <option value="">请选择分类</option>
+                                    {volist name="cats" id="vo"}
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否跳转：</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="islink" lay-skin="switch" lay-filter="formSwitch" lay-text="是|否">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" id="islink" style="display: none">
+                            <label class="layui-form-label">地址：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="link" placeholder="请输入地址" autocomplete="off"  class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否发布：</label>
+                            <div class="layui-input-block">
+                                <input type="checkbox" name="status" lay-skin="switch" lay-text="是|否" checked>
+                            </div>
+                        </div>                        
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">排序：</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="listorder" required lay-verify="required" value="99"  autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">封面：</label>
+                            <div class="layui-input-block">
+                                <div class="layui-upload">
+                                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                                    <input type="hidden" name="thumb">
+                                    <div class="layui-upload-list">
+                                        <img class="layui-upload-img" id="demo1" width="100" height="auto">
+                                        <p id="demoText"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md8">
+                <div class="layui-card">
+                    <!-- <div class="layui-card-header">内容</div> -->
+                    <div class="layui-card-body">
+                        <div class="layui-form-item layui-form-text">
+                            <!-- <label class="layui-form-label">内容</label> -->
+                            <!-- <div class="layui-input-block"> -->
+                                <textarea name="content" id="content" placeholder="请输入内容" class="layui-textarea"></textarea>
+                            <!-- </div> -->
+                        </div>
+                        <div class="layui-form-item layui-layout-admin">
+                            <div class="layui-input-block">
+                                <div class="layui-footer" style="left: 0;">
+                                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="/static/admin/layui/ace.js"></script>
+{include file="common/footer"}
+<script>
+layui.use(['form', 'upload', 'laydate', 'layedit'], function() {
+    var form = layui.form;
+    var $ = layui.$;
+    var upload = layui.upload;
+    var laydate = layui.laydate;
+    var layedit = layui.layedit;
+    layedit.set({
+        uploadImage: {
+            url: 'uploadImage',
+            type: 'post' //默认post
+        },
+        autoSync: true,
+    });
+
+    var cc = layedit.build('content', {
+        tool: ['html','code', 'strong','fontfamily','fontSize','italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+                    , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', 'anchors'
+                    , '|','table'],
+        height: 500
+    });
+    form.on('switch(formSwitch)', function(data){        
+        if(data.elem.checked){
+            // $("input[name=link]").val('');
+            $("#islink").show();
+        }else{
+            $("#islink").hide();
+        }        
+    });
+    //监听提交    
+    form.on('submit(formDemo)', function(data) {        
+        data.field.content = layedit.getContent(cc)
+        var con = JSON.stringify(data.field)
+        console.log(con)
+        $.post('newsadd',{data:JSON.stringify(data.field)},function(data){
+            if(data.code == 200){
+                layer.msg(data.msg,{icon:6});
+                $('.layui-btn-primary').click();
+            }
+        });        
+        return false;
+    });
+    var uploadInst = upload.render({
+        elem: '#test1',
+        url: 'upload',
+        field: 'image',
+        size: '204800',
+        exts: 'jpg|png|gif|bmp|jpeg',
+        before: function(obj) {
+            //预读本地文件示例，不支持ie8
+            obj.preview(function(index, file, result) {
+                $('#demo1').attr('src', result); //图片链接（base64）
+            });
+        },
+        done: function(res) {
+            //如果上传失败
+            if (res.code > 0) {
+                return layer.msg('上传失败');
+            } else {
+                $('input[name=cover]').val(res.data);
+            }
+            //上传成功
+        },
+        error: function() {
+            //演示失败状态，并实现重传
+            var demoText = $('#demoText');
+            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+            demoText.find('.demo-reload').on('click', function() {
+                uploadInst.upload();
+            });
+        }
+    });
+});
+</script>

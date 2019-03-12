@@ -1,0 +1,86 @@
+{include file="common/header" /}
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+    	<div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    分类添加
+                </div>
+                <div class="layui-card-body">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">分类名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" required lay-verify="required" placeholder="请输入分类名称" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+						    <label class="layui-form-label">上级分类</label>
+						    <div class="layui-input-block">
+						        <select name="parent" lay-verify="required">
+						            <option value="0">顶级分类</option>					            					            
+						        </select>
+						    </div>
+						</div>
+                        <div class="layui-form-item">
+						    <div class="layui-input-block">
+						    	<button class="layui-btn" lay-submit lay-filter="formDemo">新增</button>
+						      	<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+						    </div>
+						 </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md9">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    分类管理
+                </div>
+                <div class="layui-card-body">
+                    <table id="demo"></table>                    
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{include file="common/footer"}
+<script>
+layui.use(['form', 'table'], function() {
+    var form = layui.form;
+    var table = layui.table;
+    var $ = layui.$;
+
+    //监听提交
+    form.on('submit(formDemo)',function(data) {        
+        $.post('catgoryadd',{data:JSON.stringify(data.field)},function(data){
+        	if(data.code == 200){
+        		layer.msg(data.msg,{icon:6},function(){        			
+        			table.reload('demo');
+        		});
+        		form.render();        		
+        	}else{
+        		layer.msg(data.msg)
+        	}
+        })
+        return false;
+    });
+
+    table.render({
+        elem: '#demo',        
+        url: 'catgory',
+        page: true ,
+        cols: [
+            [ //表头
+                { field: 'id', title: 'ID', width: 80, sort: true}, 
+                { field: 'name', title: '栏目名'}, 
+                { field: 'create_time', title: '创建时间', sort: true }, 
+                { field: 'update_time', title: '更新时间', sort: true }
+            ]
+        ]
+    });
+
+
+});
+</script>

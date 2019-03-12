@@ -1,0 +1,26 @@
+{include file="common/header"/}
+<div class="layui-fluid">
+    <div class="layui-card">        
+        <div class="layui-card-body">            
+            <table class="layui-table" id="list" lay-filter="list"></table>            
+        </div>
+    </div>
+</div>
+{include file="common/footer"/}
+
+<script>
+    layui.use(['table','form'], function() {
+        var table = layui.table,form = layui.form,$ = layui.jquery;
+        var tableIn = table.render({
+            elem: '#list',
+            url: '{:url("getroles")}',
+			title:'角色表格',
+            cols: [[
+                { field:'id', title: '编号', width:60 },
+                { field:'name', title: '用户组', width:150, sort: true },
+                { field:'status', title: '状态',width:100 },
+                { field:'sort',title:'排序',width:100}
+            ]]
+        });
+    });
+</script>
